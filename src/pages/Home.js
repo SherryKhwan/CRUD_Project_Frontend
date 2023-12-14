@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { createRecord } from '../api/record';
 
 const Home = () => {
 
@@ -12,15 +13,41 @@ const Home = () => {
     const [size, setSize] = useState("");
     const [bedCount, setBedCount] = useState(0);
     const [bathCount, setBathCount] = useState(0);
-    const [needParking, setNeedParking] = useState(null);
-    const [needLocker, setNeedLocker] = useState(null);
-    const [needBalcony, setNeedBalcony] = useState(null);
+    const [needParking, setNeedParking] = useState(false);
+    const [needLocker, setNeedLocker] = useState(false);
+    const [needBalcony, setNeedBalcony] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const handleSubmit = (e) => {
+    const isValid = () => {
+        return true;
+    }
+
+    const objectMaker = () => {
+        return {
+            developerName: developer,
+            projectName: project,
+            unit: unit,
+            unitType: unittype,
+            level: level,
+            location: location,
+            exposure: exposure,
+            size: size,
+            bedCount: bedCount,
+            bathCount: bathCount,
+            needParking: needParking,
+            needLocker: needLocker,
+            needBalcony: needBalcony
+        }
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitted(true);
         try {
+            if (isValid()) {
+                const data = objectMaker();
+                await createRecord((data))
+            }
         } catch (error) {
 
         } finally {
@@ -40,7 +67,7 @@ const Home = () => {
                             <label htmlFor="developer" className="col-sm-3 col-form-label">Developer</label>
                             <div className="col-sm-9">
                                 <input type="text" value={developer} onChange={e => setDeveloper(e.target.value)} className={(isSubmitted && developer.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Developer Name *' required id="developer" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the developer name.
                                 </div>
                             </div>
@@ -49,7 +76,7 @@ const Home = () => {
                             <label htmlFor="project" className="col-sm-3 col-form-label">Project</label>
                             <div className="col-sm-9">
                                 <input type="text" value={project} onChange={e => setProject(e.target.value)} className={(isSubmitted && project.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Project Name *' required id="project" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the project name.
                                 </div>
                             </div>
@@ -58,7 +85,7 @@ const Home = () => {
                             <label htmlFor="unit" className="col-sm-3 col-form-label">Unit</label>
                             <div className="col-sm-9">
                                 <input type="text" value={unit} onChange={e => setUnit(e.target.value)} className={(isSubmitted && unit.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Unit Name *' required id="unit" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the unit name.
                                 </div>
                             </div>
@@ -67,7 +94,7 @@ const Home = () => {
                             <label htmlFor="unittype" className="col-sm-3 col-form-label">Unit Type</label>
                             <div className="col-sm-9">
                                 <input type="text" value={unittype} onChange={e => setUnitType(e.target.value)} className={(isSubmitted && unittype.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Unit Type *' required id="unittype" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the unit type.
                                 </div>
                             </div>
@@ -76,7 +103,7 @@ const Home = () => {
                             <label htmlFor="level" className="col-sm-3 col-form-label">Level</label>
                             <div className="col-sm-9">
                                 <input type="text" value={level} onChange={e => setLevel(e.target.value)} className={(isSubmitted && level.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Level *' required id="level" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the level.
                                 </div>
                             </div>
@@ -85,7 +112,7 @@ const Home = () => {
                             <label htmlFor="location" className="col-sm-3 col-form-label">Location</label>
                             <div className="col-sm-9">
                                 <input type="text" value={location} onChange={e => setLocation(e.target.value)} className={(isSubmitted && location.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Location *' required id="location" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the location.
                                 </div>
                             </div>
@@ -94,7 +121,7 @@ const Home = () => {
                             <label htmlFor="exposure" className="col-sm-3 col-form-label">Exposure</label>
                             <div className="col-sm-9">
                                 <input type="text" value={exposure} onChange={e => setExposure(e.target.value)} className={(isSubmitted && exposure.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Exposure *' required id="exposure" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the exposure.
                                 </div>
                             </div>
@@ -103,7 +130,7 @@ const Home = () => {
                             <label htmlFor="size" className="col-sm-3 col-form-label">Size</label>
                             <div className="col-sm-9">
                                 <input type="text" value={size} onChange={e => setSize(e.target.value)} className={(isSubmitted && size.trim() === "" ? "is-invalid form-control" : "form-control")} placeholder='Enter Size (Sq Ft) *' required id="size" />
-                                <div class="invalid-feedback">
+                                <div className="invalid-feedback">
                                     Please choose the size.
                                 </div>
                             </div>
@@ -148,7 +175,7 @@ const Home = () => {
                         </div>
                         <div className='d-flex justify-content-end'>
                             <div className='d-grid w-25 gap-2'>
-                                <button onClick={handleSubmit} className='btn btn-block btn-outline-light'>Submit</button>
+                                <button disabled={isSubmitted} onClick={handleSubmit} className='btn btn-block btn-outline-light'>Submit</button>
                             </div>
                         </div>
                     </form>

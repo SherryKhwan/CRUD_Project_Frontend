@@ -1,6 +1,6 @@
 // Navbar for the webapp
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../styles/global.css";
 
@@ -10,6 +10,10 @@ const Navbar = () => {
     const { pathname } = useLocation();
 
     const [activeScreen, setActiveScreen] = useState(pathname)
+
+    useEffect(() => {
+        setActiveScreen(pathname)
+    }, [])
 
     return (
         <nav className="navbar">
@@ -26,9 +30,6 @@ const Navbar = () => {
                         <li>
                             <Link className={activeScreen === "all" ? "active" : ""}
                                 onClick={() => setActiveScreen("all")} to="/all">All Records</Link>
-                        </li>
-                        <li>
-                            <Link to="/about">About</Link>
                         </li>
                     </ul>
                 </div>
